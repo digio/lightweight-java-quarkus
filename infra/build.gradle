@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'java-library'
+}
+
+application {
+    mainClass = 'au.com.digio.lightweightjava.infra.InfraApp'
+}
+
+group = 'au.com.digio'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+allprojects {
+    repositories {
+        maven { url 'https://repo.spring.io/release' }
+        mavenCentral()
+    }
+    group = rootProject.group
+    version = rootProject.version
+}
+
+def CDK_VERSION = "1.149.0"
+
+dependencies {
+    implementation "software.amazon.awscdk:core:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:lambda:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:apigatewayv2:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:apigatewayv2-integrations:${CDK_VERSION}"
+
+    implementation "software.amazon.awscdk:route53:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:route53-targets:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:route53-patterns:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:ses:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:certificatemanager:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:s3:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:s3-deployment:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:cloudfront:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:events:${CDK_VERSION}"
+    implementation "software.amazon.awscdk:events-targets:${CDK_VERSION}"
+
+    implementation "software.amazon.awscdk:lambda-event-sources:${CDK_VERSION}"
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'au.com.digio.lightweightjava.infra.InfraApp'
+        )
+    }
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}
+
+build.dependsOn buildZip

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd ${LAMBDA_TASK_ROOT:-.}
+
+./lightweight-java-quarkus-1.0.0-SNAPSHOT-runner
